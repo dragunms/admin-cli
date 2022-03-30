@@ -1,0 +1,27 @@
+import {deleteData, getData, postData, putData} from 'src/utilities/requestApi';
+import {<%= constant %>_ENDPOINT} from 'src/constants/apiEndpoints';
+
+const <%= pascal %>ServiceAPI = {
+getPaging: (options = {}) => {
+options = {
+page: 1,
+...options
+};
+return getData(<%= constant %>_ENDPOINT, options);
+},
+getOne: (id) => {
+return getData(`${<%= constant %>_ENDPOINT}/${id}`);
+},
+createOne: (data) => {
+return postData(<%= constant %>_ENDPOINT, data);
+},
+updateOne: (id, data) => {
+return putData(`${<%= constant %>_ENDPOINT}/${id}`, data);
+},
+delete: (id) => {
+return <%= type %>(`${<%= constant %>_ENDPOINT}/${id}`);
+},
+};
+
+export default <%= pascal %>ServiceAPI;
+

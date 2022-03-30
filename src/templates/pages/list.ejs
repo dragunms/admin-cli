@@ -1,0 +1,34 @@
+import withDataList from 'src/HOC/withDataList';
+
+import {<%= constant %>_ROLE} from 'src/constants/roles';
+
+import {clear<%= pascal %>, getPaging<%= pascal %>, delete<%= pascal %>, pushItem<%= pascal %>} from 'src/redux/<%= camelPlural %>/action';
+
+const ListPage = () => {
+return null;
+};
+
+const list = [
+{name: '<%= field %>'},
+];
+const search = {
+};
+
+export default withDataList(
+'<%= camelPlural %>',
+{
+view: [<%= constant %>_ROLE.READ],
+update: [<%= constant %>_ROLE.UPDATE],
+delete: [<%= constant %>_ROLE.DELETE],
+create: [<%= constant %>_ROLE.CREATE],
+},
+{
+list: getPaging<%= pascal %>,
+delete: delete<%= pascal %>,
+clear: clear<%= pascal %>,
+detail: pushItem<%= pascal %>,
+},
+list,
+'label.title',
+search,
+)(ListPage);

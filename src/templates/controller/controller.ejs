@@ -1,0 +1,104 @@
+import {paginateMiddleware, roleMiddleware, validateMiddleware} from '@azteam/express';
+import {NOT_EXISTS} from '@azteam/error';
+
+import {<%= constant %>_ROLE} from 'src/constants/role';
+import {HTTP_METHOD, REQUEST_TYPE} from 'src/constants/system';
+import {USER_LEVEL} from 'src/constants/variable';
+import {rulesID} from 'src/constants/validate';
+
+import <%= camel %>Repository from 'src/apps/<%= app %>/repositories/<%= camel %>/repository';
+
+import {paginateOptions, rulesCreate, rulesModify} from './request';
+import {allowResponse, guardResponse} from './response';
+
+
+export default {
+    /*
+     *  Admin Role
+     */
+
+    paginate: {
+        path: '/<%= snakePlural %>',
+        type: HTTP_METHOD.GET,
+        method: [
+            paginateMiddleware(paginateOptions),
+            roleMiddleware([
+                <%= constant %>_ROLE.READ
+            ], USER_LEVEL.ADMIN),
+            async (req, res) => {
+                const paginateData = await <%= camel %>Repository.find(req.query, req.paginate);
+
+                return res.success(paginateData, guardResponse, allowResponse);
+            }
+        ],
+    },
+
+    findOne: {
+        path: '/<%= snakePlural %>/:id',
+        type: HTTP_METHOD.GET,
+        method: [
+            validateMiddleware(REQUEST_TYPE.PARAMS, rulesID),
+            roleMiddleware([
+                <%= constant %>_ROLE.READ
+            ], USER_LEVEL.ADMIN),
+            async (req, res) => {
+                const item = await <%= camel %>Repository.findOneById(req.params.id);
+                if (!item) return res.error(NOT_EXISTS);
+                return res.success(item, guardResponse, allowResponse);
+            }
+        ],
+    },
+
+    create: {
+        path: '/<%= snakePlural %>',
+        type: HTTP_METHOD.POST,
+        method: [
+            validateMiddleware(REQUEST_TYPE.BODY, rulesCreate),
+            roleMiddleware([
+                <%= constant %>_ROLE.CREATE
+            ], USER_LEVEL.ADMIN),
+            async (req, res) => {
+                const item = await <%= camel %>Repository.createByUser(req.user.id, req.body);
+
+                return res.success(item, guardResponse, allowResponse);
+            }
+        ],
+    },
+
+    modify: {
+        path: '/<%= snakePlural %>/:id',
+        type: HTTP_METHOD.PUT,
+        method: [
+            validateMiddleware(REQUEST_TYPE.PARAMS, rulesID),
+            validateMiddleware(REQUEST_TYPE.BODY, rulesModify),
+            roleMiddleware([
+                <%= constant %>_ROLE.UPDATE
+            ], USER_LEVEL.ADMIN),
+            async (req, res) => {
+                let item = await <%= camel %>Repository.findOneById(req.params.id);
+                if (!item) return res.error(NOT_EXISTS);
+                item = await <%= camel %>Repository.modifyByUser(req.user.id, item, req.body);
+
+                return res.success(item, guardResponse, allowResponse);
+            }
+        ],
+    },
+
+    delete: {
+        path: '/<%= snakePlural %>/:id',
+        type: HTTP_METHOD.DEL,
+        method: [
+            validateMiddleware(REQUEST_TYPE.PARAMS, rulesID),
+            roleMiddleware([
+                <%= constant %>_ROLE.DELETE
+            ], USER_LEVEL.ADMIN),
+            async (req, res) => {
+                const item = await <%= camel %>Repository.findOneById(req.params.id);
+                if (!item) return res.error(NOT_EXISTS);
+
+                await <%= camel %>Repository.delete(item);
+                return res.success(true);
+            }
+        ],
+    },
+};

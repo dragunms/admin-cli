@@ -1,0 +1,108 @@
+import {all, fork, put, select, takeLatest} from 'redux-saga/effects';
+import {
+CREATE_ONE_<%= constant %>,
+DELETE_<%= constant %>,
+GET_ONE_<%= constant %>,
+GET_PAGING_<%= constant %>,
+PUSH_ITEM_<%= constant %>,
+PUSH_PAGING_<%= constant %>,
+RELOAD_<%= constant %>,
+UPDATE_ONE_<%= constant %>,
+} from 'src/redux/<%= camelPlural %>/action';
+import {PUT_SUCCESS} from 'src/constants/actionTypes';
+
+import {loadDataAPI} from 'src/redux/util';
+
+import <%= pascal %>ServiceAPI from 'src/apis/<%= pascal %>ServiceAPI';
+
+import history from 'src/redux/history';
+
+function* watchGetPaging<%= pascal %>() {
+yield takeLatest(GET_PAGING_<%= constant %>, function* (action) {
+const res = yield loadDataAPI(action, <%= pascal %>ServiceAPI.getPaging, action.payload.options);
+if (res.success) {
+yield put({
+type: PUSH_PAGING_<%= constant %>,
+payload: {
+data: res.data,
+filter: res.options,
+},
+});
+}
+});
+}
+
+function* watchDelete<%= pascal %>() {
+yield takeLatest(DELETE_<%= constant %>, function* (action) {
+const res = yield loadDataAPI(action, <%= pascal %>ServiceAPI.delete, action.payload.id);
+if (res.success) {
+yield put({
+type: RELOAD_<%= constant %>,
+});
+yield put({
+type: PUT_SUCCESS,
+payload: {
+msg: 'message.delete_success',
+},
+});
+}
+});
+}
+
+function* watchGetOne<%= pascal %>() {
+yield takeLatest(GET_ONE_<%= constant %>, function* (action) {
+const item = yield select((state) => state.<%= camelPlural%>.item);
+if (!item.id) {
+const res = yield loadDataAPI(action, <%= pascal %>ServiceAPI.getOne, action.payload.id);
+if (res.success) {
+yield put({
+type: PUSH_ITEM_<%= constant %>,
+payload: {
+data: res.data,
+},
+});
+}
+}
+});
+}
+
+function* watchCreateOne<%= pascal %>() {
+yield takeLatest(CREATE_ONE_<%= constant %>, function* (action) {
+const res = yield loadDataAPI(action, <%= pascal %>ServiceAPI.createOne, action.payload.data);
+if (res.success) {
+yield put({
+type: PUT_SUCCESS,
+payload: {
+msg: 'message.create_success',
+},
+});
+}
+});
+}
+
+function* watchUpdateOne<%= pascal %>() {
+yield takeLatest(UPDATE_ONE_<%= constant %>, function* (action) {
+const res = yield loadDataAPI(action, <%= pascal %>ServiceAPI.updateOne, action.payload.id, action.payload.data);
+if (res.success) {
+if (action.payload.back) {
+history.goBack();
+}
+yield put({
+type: PUT_SUCCESS,
+payload: {
+msg: 'message.update_success',
+},
+});
+}
+});
+}
+
+export default function* rootSaga() {
+yield all([
+fork(watchGetPaging<%= pascal %>),
+fork(watchDelete<%= pascal %>),
+fork(watchGetOne<%= pascal %>),
+fork(watchCreateOne<%= pascal %>),
+fork(watchUpdateOne<%= pascal %>),
+]);
+}

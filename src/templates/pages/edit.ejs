@@ -1,0 +1,40 @@
+import './styles.less';
+
+import React from 'react';
+import {Card, Row, Col} from 'antd';
+
+import withModifySEO from 'src/HOC/withModifySEO';
+
+import TranslationText from 'src/components/TranslationText';
+
+import {<%= constant %>_ROLE} from 'src/constants/roles';
+
+
+import {clear<%= pascal %>, create<%= pascal %>, getOne<%= pascal %>, update<%= pascal %>} from 'src/redux/<%= camelPlural %>/action';
+
+const EditPage = ({formControl, data}) => {
+
+return (
+<>
+<Card className='gx-card modify-page-card' title={<TranslationText id='label.post_info_section' />}>
+<Row>
+    <Col md={24} xs={24} />
+</Row>
+</Card>
+</>
+);
+};
+
+export default withModifySEO(
+'<%= camelPlural %>',
+{
+roles: [<%= constant %>_ROLE.UPDATE, <%= constant %>_ROLE.CREATE],
+},
+{
+getOne: getOne<%= pascal %>,
+create: create<%= pascal %>,
+update: update<%= pascal %>,
+clear: clear<%= pascal %>,
+},
+true
+)(EditPage);

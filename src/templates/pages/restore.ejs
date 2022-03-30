@@ -1,0 +1,31 @@
+import withDataList from 'src/HOC/withDataList';
+
+import {<%= constant %>_ROLE} from 'src/constants/roles';
+
+import {clearTrash<%= pascal %>, getPagingTrash<%= pascal %>, deleteTrash<%= pascal %>, pushItemTrash<%= pascal %>} from 'src/redux/trash<%= pascalPlural %>/action';
+
+const ListPage = () => {
+return null;
+};
+
+const list = [
+{name: '<%= field %>'},
+];
+const search = {
+};
+
+export default withDataList(
+'trash<%= pascalPlural %>',
+{
+restore: [<%= constant %>_ROLE.RESTORE],
+},
+{
+list: getPagingTrash<%= pascal %>,
+delete: deleteTrash<%= pascal %>,
+clear: clearTrash<%= pascal %>,
+detail: pushItemTrash<%= pascal %>,
+},
+list,
+'label.title',
+search,
+)(ListPage);

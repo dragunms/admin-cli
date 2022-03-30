@@ -1,0 +1,33 @@
+import {CLEAR_<%= constant %>, PUSH_ITEM_<%= constant %>, PUSH_PAGING_<%= constant %>, RELOAD_<%= constant %>} from 'src/redux/<%= camelPlural %>/action';
+
+const INIT_STATE = {
+item: {},
+data: null,
+filter: null,
+reload: 0,
+};
+
+export default (state = INIT_STATE, action) => {
+switch (action.type) {
+case CLEAR_<%= constant %>:
+return INIT_STATE;
+case PUSH_PAGING_<%= constant %>:
+return {
+...state,
+data: action.payload.data,
+filter: action.payload.filter,
+};
+case PUSH_ITEM_<%= constant %>:
+return {
+...state,
+item: action.payload.data,
+};
+case RELOAD_<%= constant %>:
+return {
+...state,
+reload: state.reload + 1,
+};
+default:
+return state;
+}
+};

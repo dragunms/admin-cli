@@ -1,0 +1,69 @@
+export const CREATE_ONE_<%= constant %> = 'CREATE_ONE_<%= constant %>';
+export const DELETE_<%= constant %> = 'DELETE_<%= constant %>';
+export const GET_ONE_<%= constant %> = 'GET_ONE_<%= constant %>';
+export const GET_PAGING_<%= constant %> = 'GET_PAGING_<%= constant %>';
+export const PUSH_ITEM_<%= constant %> = 'PUSH_ITEM_<%= constant %>';
+export const PUSH_PAGING_<%= constant %> = 'PUSH_PAGING_<%= constant %>';
+export const RELOAD_<%= constant %> = 'RELOAD_<%= constant %>';
+export const UPDATE_ONE_<%= constant %> = 'UPDATE_ONE_<%= constant %>';
+export const CLEAR_<%= constant %> = 'CLEAR_<%= constant %>';
+
+export const getPaging<%= pascal %> = (options) => {
+return {
+type: GET_PAGING_<%= constant %>,
+payload: {
+options,
+},
+};
+};
+export const getOne<%= pascal %> = (id) => {
+return {
+type: GET_ONE_<%= constant %>,
+payload: {
+id,
+},
+};
+};
+
+export const pushItem<%= pascal %> = (item) => {
+return {
+type: PUSH_ITEM_<%= constant %>,
+payload: {
+data: item,
+},
+};
+};
+
+export const clear<%= pascal %> = () => {
+return {
+type: CLEAR_<%= constant %>,
+};
+};
+
+export const create<%= pascal %> = (data) => {
+return {
+type: CREATE_ONE_<%= constant %>,
+payload: {
+data,
+},
+};
+};
+
+export const update<%= pascal %> = (id, data) => {
+return {
+type: UPDATE_ONE_<%= constant %>,
+payload: {
+back: true,
+data,
+id,
+},
+};
+};
+export const delete<%= pascal %> = (id) => {
+return {
+type: DELETE_<%= constant %>,
+payload: {
+id,
+},
+};
+};

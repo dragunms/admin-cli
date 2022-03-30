@@ -1,0 +1,15 @@
+import _ from 'lodash';
+
+
+export const paginateOptions = {
+    searchFields: [],
+    sortFields: [],
+};
+
+
+export const rulesCreate = {}
+export const rulesModify = _.mapValues(rulesCreate, (obj) => {
+    return {...obj, optional: true};
+});
+
+
